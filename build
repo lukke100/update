@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+cd "$(dirname -- "$0")"
+
+"${CC-c99}" ${CFLAGS-} ${LDFLAGS-} -o update update.c
