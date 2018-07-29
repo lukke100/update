@@ -1,0 +1,6 @@
+#!/bin/sh -eu
+command=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+test ! -e "$command"
+touch -t 201601010000 -- "${prereq=$(mktemp)}"
+touch -t 200009130000 -- "${target=$(mktemp)}"
+! ./update -p "$prereq" -t "$target" -- "$command" || exit 1
