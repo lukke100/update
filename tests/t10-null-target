@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+canary=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+./update -t '' touch -- "$canary"
+test -e "$canary"
