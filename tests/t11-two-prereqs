@@ -1,0 +1,7 @@
+#!/bin/sh -eu
+canary=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+touch -t 197703300000 -- "${prereq1=$(mktemp)}"
+touch -t 200112040000 -- "${prereq2=$(mktemp)}"
+touch -t 200106060000 -- "${target=$(mktemp)}"
+./update -p "$prereq1" -p "$prereq2" -t "$target" touch -- "$canary"
+test -e "$canary"
