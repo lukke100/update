@@ -1,6 +1,7 @@
 #!/bin/sh -eu
-canary=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+export LC_CTYPE=C
+canary=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
 touch -t 201601010000 -- "${prereq=$(mktemp)}"
-target=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+target=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
 ./update -p "$prereq" -t "$target" touch -- "$canary"
 test -e "$canary"

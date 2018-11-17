@@ -1,5 +1,6 @@
 #!/bin/sh -eu
-canary=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+export LC_CTYPE=C
+canary=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
 touch -t 200106060000 -- "${prereq=$(mktemp)}"
 touch -t 197703300000 -- "${target1=$(mktemp)}"
 touch -t 200112040000 -- "${target2=$(mktemp)}"

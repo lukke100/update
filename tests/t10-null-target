@@ -1,4 +1,5 @@
 #!/bin/sh -eu
-canary=$TMPDIR/tmp.$(LC_CTYPE=C tr -cd '[:alnum:]' </dev/urandom | head -c 10)
+export LC_CTYPE=C
+canary=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
 ./update -t '' touch -- "$canary"
 test -e "$canary"
