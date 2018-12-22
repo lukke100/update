@@ -4,6 +4,7 @@ cd "$(dirname -- "$0")"
 "${CC-c99}" ${CFLAGS-} ${LDFLAGS-} -o update update.c
 
 echo 1.."$(printf '%.0s\n' tests/t* | wc -l)"
+fails=0
 idx=0
 for test in tests/t*
 do
@@ -17,6 +18,7 @@ do
 		echo ok $((idx += 1)) - "$test"
 	else
 		echo not ok $((idx += 1)) - "$test"
+		: $((fails += 1))
 	fi
 
 	sed -e 's/^/# [STDOUT] /' -- "$tmpout"
@@ -25,3 +27,4 @@ do
 	rm -r -- "$TMPDIR"
 	unset TMPDIR
 done
+exit $fails
