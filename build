@@ -4,11 +4,14 @@ cd "$(dirname -- "$0")"
 "${CC-c99}" ${CFLAGS-} ${LDFLAGS-} -o update update.c
 
 echo 1.."$(printf '%.0s\n' tests/t* | wc -l)"
+
 fails=0
 idx=0
+
 for test in tests/t*
 do
 	export TMPDIR
+
 	TMPDIR=$(mktemp -d)
 	tmpout=$(mktemp)
 	tmperr=$(mktemp)
@@ -23,8 +26,9 @@ do
 
 	sed -e 's/^/# [STDOUT] /' -- "$tmpout"
 	sed -e 's/^/# [STDERR] /' -- "$tmperr"
-
 	rm -r -- "$TMPDIR"
+
 	unset TMPDIR
 done
+
 exit $fails
