@@ -3,18 +3,26 @@
 #include <errno.h>
 #include <libgen.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
+
+bool timegt(struct timespec left, struct timespec right)
+{
+	if (left.tv_sec != right.tv_sec)
+		return left.tv_sec > right.tv_sec;
+	else
+		return left.tv_nsec > right.tv_nsec;
+}
 
 int main(int argc, char *argv[])
 {
 	struct stat stbuf;
+	struct timespec pmtime, tmtime;
 	char *progname;
-	time_t pmtime, tmtime;
 	int option;
 	bool pfound, terror, tfound;
 
@@ -29,16 +37,16 @@ int main(int argc, char *argv[])
 				        optarg, strerror(errno));
 				return EXIT_FAILURE;
 			}
-			if (!pfound || stbuf.st_mtime > pmtime) {
-				pmtime = stbuf.st_mtime;
+			if (!pfound || timegt(stbuf.st_mtim, pmtime)) {
+				pmtime = stbuf.st_mtim;
 				pfound = true;
 			}
 			break;
 		case 't':
 			if (stat(optarg, &stbuf)) {
 				terror = true;
-			} else if (!tfound || stbuf.st_mtime < tmtime) {
-				tmtime = stbuf.st_mtime;
+			} else if (!tfound || timegt(tmtime, stbuf.st_mtim)) {
+				tmtime = stbuf.st_mtim;
 				tfound = true;
 			}
 			break;
@@ -54,7 +62,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (!terror && !(pfound && tfound && pmtime >= tmtime))
+	if (!terror && !(pfound && tfound && !timegt(tmtime, pmtime)))
 		return EXIT_SUCCESS;
 
 	argc -= optind;
