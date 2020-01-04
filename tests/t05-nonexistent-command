@@ -1,7 +1,5 @@
 #!/bin/sh -eu
-export LC_CTYPE=C
-command=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
-test ! -e "$command"
+command=$(mktemp -u)
 touch -t 201601010000 -- "${prereq=$(mktemp)}"
 touch -t 200009130000 -- "${target=$(mktemp)}"
 ! ./update -p "$prereq" -t "$target" -- "$command" || exit 1

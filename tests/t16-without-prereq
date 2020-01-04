@@ -1,6 +1,5 @@
 #!/bin/sh -eu
-export LC_CTYPE=C
-canary=$TMPDIR/tmp.$(tr -cd '[:alnum:]' </dev/urandom | fold -w10 | head -n1)
+canary=$(mktemp -u)
 touch -t 200009130000 -- "${target=$(mktemp)}"
 ./update -t "$target" touch -- "$canary"
 test ! -e "$canary"
