@@ -1,11 +1,9 @@
 #!/bin/sh -eu
 canary=$(mktemp -u)
-touch -t 201601010000 -- "${prereq1=$(mktemp)}"
-prereq2=
+touch -t 201601010000 -- "${prereq=$(mktemp)}"
 touch -t 200009130000 -- "${target=$(mktemp)}"
-if ./update -p "$prereq1" -t "$target" -p "$prereq2" touch -- "$canary"
+if ./update -p "$prereq" -t "$target" -p '' touch -- "$canary"
 then
 	exit 1
 fi
 test ! -e "$canary"
-exit 0
