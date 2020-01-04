@@ -7,5 +7,5 @@ if ./update -p "$prereq1" -t "$target" -p "$prereq2" touch -- "$canary"
 then
 	exit 1
 fi
-! test -e "$canary"
+test ! -e "$canary"
 exit 0

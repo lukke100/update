@@ -3,4 +3,4 @@ canary=$(mktemp -u)
 touch -d 2001-03-30T05:44:40.25 -- "${prereq=$(mktemp)}"
 touch -d 2001-03-30T05:44:40.75 -- "${target=$(mktemp)}"
 ./update -p "$prereq" -t "$target" touch -- "$canary"
-! test -e "$canary"
+test ! -e "$canary"
