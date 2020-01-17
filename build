@@ -22,12 +22,12 @@ do
 	else
 		echo not ok $((idx += 1)) - "$test"
 		: $((fails += 1))
+
+		sed -e 's/^/# [STDOUT] /' -- "$tmpout"
+		sed -e 's/^/# [STDERR] /' -- "$tmperr"
 	fi
 
-	sed -e 's/^/# [STDOUT] /' -- "$tmpout"
-	sed -e 's/^/# [STDERR] /' -- "$tmperr"
 	rm -r -- "$TMPDIR"
-
 	unset TMPDIR
 done
 
