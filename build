@@ -5,8 +5,8 @@ cd "$(dirname -- "$0")"
 
 echo 1.."$(printf '%.0s\n' tests/t* | wc -l)"
 
-fails=0
-idx=0
+failures=0
+index=0
 
 for test in tests/t*
 do
@@ -18,10 +18,10 @@ do
 
 	if "$test" </dev/null >"$tmpout" 2>"$tmperr"
 	then
-		echo ok $((idx += 1)) - "$test"
+		echo ok $((index += 1)) - "$test"
 	else
-		echo not ok $((idx += 1)) - "$test"
-		: $((fails += 1))
+		echo not ok $((index += 1)) - "$test"
+		: $((failures += 1))
 
 		sed -e 's/^/# [STDOUT] /' -- "$tmpout"
 		sed -e 's/^/# [STDERR] /' -- "$tmperr"
@@ -31,4 +31,4 @@ do
 	unset TMPDIR
 done
 
-exit $fails
+exit "$failures"
