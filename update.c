@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 bool timegt(struct timespec left, struct timespec right)
@@ -20,9 +19,8 @@ bool timegt(struct timespec left, struct timespec right)
 
 int main(int argc, char *argv[])
 {
-	struct stat stbuf;
 	struct timespec pmtime, tmtime;
-	char *progname;
+	const char *progname;
 	int option;
 	bool pfound, terror, tfound;
 
@@ -31,16 +29,20 @@ int main(int argc, char *argv[])
 
 	while (option = getopt(argc, argv, ":p:t:"), option != -1) {
 		switch (option) {
+			struct stat stbuf;
+
 		case 'p':
 			if (stat(optarg, &stbuf)) {
 				fprintf(stderr, "%s: %s: %s\n", progname,
 				        optarg, strerror(errno));
 				return EXIT_FAILURE;
 			}
+
 			if (!pfound || timegt(stbuf.st_mtim, pmtime)) {
 				pmtime = stbuf.st_mtim;
 				pfound = true;
 			}
+
 			break;
 		case 't':
 			if (stat(optarg, &stbuf)) {
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
 				tmtime = stbuf.st_mtim;
 				tfound = true;
 			}
+
 			break;
 		case ':':
 			fprintf(stderr,
@@ -72,8 +75,6 @@ int main(int argc, char *argv[])
 		return EXIT_SUCCESS;
 
 	execvp(argv[0], argv);
-
 	fprintf(stderr, "%s: %s: %s\n", progname, argv[0], strerror(errno));
-
 	return EXIT_FAILURE;
 }
